@@ -1,0 +1,44 @@
+rules_version = '2';
+
+/* =========================================================
+   CLASS ONE - FIRESTORE SECURITY RULES
+   Project: class-one-263aa
+   =========================================================
+
+   The ClassOne website (js/app.js) reads, adds and deletes
+   documents in two collections: "sales" and "expenses".
+
+   These rules allow that only for users who are signed in
+   through Firebase Authentication (login.html / signup.html).
+   Signed-out visitors and anyone else get nothing.
+
+   HOW TO PUBLISH (no command line needed):
+   1. Open https://console.firebase.google.com/
+   2. Select the project "class-one-263aa".
+   3. Left menu: Build -> Firestore Database.
+   4. Open the "Rules" tab.
+   5. Select everything in the editor and replace it with the
+      rule block below (the part starting at "service").
+   6. Click "Publish". Changes apply within a few seconds.
+   ========================================================= */
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Everything not matched below stays closed.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Sales records: the app reads the table, adds a sale and deletes a sale.
+    // It never edits an existing sale, so update is left denied.
+    match /sales/{saleId} {
+      allow read, create, delete: if request.auth != null;
+    }
+
+    // Expenses: same pattern - read the table, add, delete.
+    match /expenses/{expenseId} {
+      allow read, create, delete: if request.auth != null;
+    }
+  }
+}

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>My Account | Class One</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="dashboard-page">
+
+  <div class="dashboard-container">
+
+    <div class="dashboard-box">
+
+      <img
+        src="class-one-logo.png"
+        alt="Class One Logo"
+        class="dashboard-logo"
+      >
+
+      <div class="about-label">MY ACCOUNT</div>
+
+      <h1>Welcome, <span id="user-name">Customer</span>!</h1>
+
+      <p id="user-email"></p>
+
+      <div class="dashboard-actions">
+
+        <a href="index.html" class="dashboard-btn">
+          Continue recording
+        </a>
+
+        <button id="logout-btn" class="logout-btn">
+          Logout
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <script type="module">
+
+    import { initializeApp } from
+      "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+
+    import {
+      getAuth,
+      onAuthStateChanged,
+      signOut
+    } from
+      "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+
+
+    const firebaseConfig = {
+
+      apiKey: "AIzaSyAQBRnfmZIP_Ahk0WiyoKqf87NTaggt4vI",
+
+      authDomain: "class-one-263aa.firebaseapp.com",
+
+      projectId: "class-one-263aa",
+
+      storageBucket: "class-one-263aa.firebasestorage.app",
+
+      messagingSenderId: "534348284001",
+
+      appId: "1:534348284001:web:1730328fec2eb21bc3ea20"
+
+    };
+
+
+    const app = initializeApp(firebaseConfig);
+
+    const auth = getAuth(app);
+
+
+    onAuthStateChanged(auth, (user) => {
+
+      if (user) {
+
+        document.getElementById("user-name").textContent =
+          user.displayName || "Customer";
+
+        document.getElementById("user-email").textContent =
+          user.email;
+
+      } else {
+
+        window.location.href = "login.html";
+
+      }
+
+    });
+
+
+    document
+      .getElementById("logout-btn")
+      .addEventListener("click", async () => {
+
+        await signOut(auth);
+
+        window.location.href = "login.html";
+
+      });
+
+  </script>
+
+  <script type="module" src="js/app.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sales Dashboard | Class One</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        :root {
+            --page-bg: #383737;
+            --card-bg: #171717;
+            --card-soft: #1f1f1f;
+            --line: #2e2e2e;
+            --text: #f5f5f5;
+            --muted: #a9a9a9;
+            --accent: #f57c00;
+            --accent-soft: rgba(245, 124, 0, 0.12);
+            --good: #3ddc84;
+            --bad: #ff6b6b;
+        }
+
+        * { box-sizing: border-box; }
+
+        body { margin: 0; }
+
+        .sales-page {
+            padding: 90px 5% 70px;
+            background: var(--page-bg);
+            min-height: 100vh;
+            color: var(--text);
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        .page-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .back-home {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .back-home:hover { text-decoration: underline; }
+
+        .page-top-date {
+            font-size: 13px;
+            color: var(--muted);
+            letter-spacing: 0.3px;
+        }
+
+        /* ---------- HEADER ---------- */
+
+        .sales-header {
+            background: linear-gradient(135deg, #111 0%, #1b1b1b 100%);
+            border: 1px solid var(--line);
+            color: #fff;
+            padding: 26px 28px;
+            border-radius: 16px;
+            margin-bottom: 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .sales-header h1 {
+            margin: 0 0 6px;
+            font-size: 26px;
+            letter-spacing: -0.3px;
+        }
+
+        .sales-header p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .header-chip {
+            text-align: right;
+            border-left: 3px solid var(--accent);
+            padding-left: 16px;
+        }
+
+        .header-chip span {
+            display: block;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: var(--muted);
+        }
+
+        .header-chip strong {
+            display: block;
+            font-size: 17px;
+            margin-top: 4px;
+        }
+
+        /* ---------- AUTH NOTICE ---------- */
+
+        .auth-notice {
+            background: #fff3e0;
+            border-left: 4px solid var(--accent);
+            color: #4a2c00;
+            padding: 14px 18px;
+            border-radius: 10px;
+            margin-bottom: 22px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .auth-notice a { color: #d96800; }
+
+        /* ---------- TODAY PANEL ---------- */
+
+        .today-panel {
+            background: linear-gradient(135deg, #111 0%, #241708 100%);
+            border: 1px solid #3a2a14;
+            border-radius: 16px;
+            padding: 26px 28px;
+            margin-bottom: 18px;
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .today-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1.4px;
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .today-label::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 0 4px var(--accent-soft);
+        }
+
+        .today-amount {
+            display: block;
+            font-size: 42px;
+            line-height: 1.15;
+            margin: 10px 0 8px;
+            color: #fff;
+            letter-spacing: -1px;
+        }
+
+        .today-meta {
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .today-meta b { color: #fff; font-weight: 600; }
+
+        .today-side {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .today-side div {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 12px;
+            padding: 14px 16px;
+        }
+
+        .today-side span {
+            display: block;
+            font-size: 12px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .today-side strong {
+            display: block;
+            margin-top: 6px;
+            font-size: 20px;
+        }
+
+        .positive { color: var(--good); }
+        .negative { color: var(--bad); }
+
+        /* ---------- KPI CARDS ---------- */
+
+        .kpi-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 14px;
+            margin-bottom: 26px;
+        }
+
+        .kpi {
+            background: var(--card-bg);
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            padding: 18px 20px;
+        }
+
+        .kpi span {
+            display: block;
+            font-size: 12px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.9px;
+        }
+
+        .kpi strong {
+            display: block;
+            margin-top: 8px;
+            font-size: 22px;
+            color: var(--text);
+        }
+
+        .kpi.accent strong { color: var(--accent); }
+
+        /* ---------- CARDS ---------- */
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 22px;
+        }
+
+        .card-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-bottom: 18px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .card-head h2 {
+            margin: 0;
+            font-size: 18px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-head h2::before {
+            content: "";
+            width: 4px;
+            height: 18px;
+            border-radius: 2px;
+            background: var(--accent);
+        }
+
+        .card-head p {
+            margin: 6px 0 0;
+            font-size: 13px;
+            color: var(--muted);
+            font-weight: 400;
+        }
+
+        .card-hint {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        /* ---------- FORMS ---------- */
+
+        .form-columns {
+            display: grid;
+            grid-template-columns: 1.15fr 1fr;
+            gap: 22px;
+            align-items: start;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px 16px;
+        }
+
+        .field label {
+            display: block;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+            color: var(--muted);
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .field input,
+        .field select {
+            width: 100%;
+            padding: 11px 12px;
+            border: 1px solid #3a3a3a;
+            border-radius: 8px;
+            background: #fdfdfd;
+            color: #222;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .field input:focus,
+        .field select:focus {
+            outline: 2px solid var(--accent);
+            outline-offset: 1px;
+        }
+
+        .field-help {
+            display: block;
+            margin-top: 5px;
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        .full-width { grid-column: 1 / -1; }
+
+        .btn-primary,
+        .btn-secondary {
+            width: 100%;
+            border: none;
+            padding: 13px;
+            border-radius: 9px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 14px;
+            font-family: inherit;
+            transition: background 0.15s ease;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .btn-primary:hover { background: #d96800; }
+
+        .btn-primary:disabled,
+        .btn-secondary:disabled {
+            opacity: 0.6;
+            cursor: default;
+        }
+
+        .btn-secondary {
+            background: #2b2b2b;
+            color: #fff;
+            border: 1px solid #3a3a3a;
+        }
+
+        .btn-secondary:hover { background: #353535; }
+
+        /* ---------- TABLES ---------- */
+
+        .table-wrapper {
+            overflow-x: auto;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+        }
+
+        .data-table {
+            width: 100%;
+            min-width: 700px;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 12px 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--line);
+            color: var(--text);
+            white-space: nowrap;
+        }
+
+        .data-table th {
+            background: #101010;
+            color: var(--muted);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.9px;
+            font-weight: 700;
+            position: sticky;
+            top: 0;
+        }
+
+        .data-table tbody tr:hover { background: rgba(255, 255, 255, 0.03); }
+        .data-table tbody tr:last-child td { border-bottom: none; }
+
+        .data-table td.num { text-align: right; }
+        .data-table th.num { text-align: right; }
+
+        .data-table td.money { font-weight: 700; }
+
+        .data-table tfoot td {
+            background: #101010;
+            font-weight: 700;
+            border-top: 1px solid #3a3a3a;
+        }
+
+        .data-table .empty td {
+            text-align: center;
+            color: var(--muted);
+            padding: 26px 14px;
+            white-space: normal;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 999px;
+            background: #272727;
+            color: #dcdcdc;
+            font-size: 11px;
+            font-weight: 600;
+            border: 1px solid #3a3a3a;
+        }
+
+        .badge-today {
+            background: var(--accent-soft);
+            color: var(--accent);
+            border-color: #4a3210;
+        }
+
+        .btn-delete {
+            background: transparent;
+            color: #ff8080;
+            border: 1px solid #4a2626;
+            padding: 6px 11px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            font-family: inherit;
+        }
+
+        .btn-delete:hover {
+            background: #2a1515;
+            color: #fff;
+        }
+
+        .btn-link {
+            background: none;
+            border: none;
+            color: var(--accent);
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 700;
+            font-family: inherit;
+            padding: 0;
+        }
+
+        .btn-link:hover { text-decoration: underline; }
+
+        /* ---------- FILTER BAR ---------- */
+
+        .filter-bar {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .filter-bar select,
+        .filter-bar input {
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid #3a3a3a;
+            background: #222;
+            color: var(--text);
+            font-size: 13px;
+            font-family: inherit;
+        }
+
+        .filter-bar input { flex: 1; min-width: 180px; }
+
+        /* ---------- MONTHS ---------- */
+
+        .month-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+        }
+
+        .month-item {
+            padding: 14px 16px;
+            background: var(--card-soft);
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .month-item strong {
+            display: block;
+            color: var(--accent);
+            font-size: 16px;
+            margin-top: 6px;
+        }
+
+        /* ---------- RESPONSIVE ---------- */
+
+        @media (max-width: 900px) {
+            .today-panel,
+            .form-columns {
+                grid-template-columns: 1fr;
+            }
+
+            .today-amount { font-size: 34px; }
+
+            .form-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 600px) {
+            .sales-page { padding: 80px 4% 50px; }
+            .today-side { grid-template-columns: 1fr; }
+            .header-chip { border-left: none; padding-left: 0; text-align: left; }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="sales-page">
+
+    <div class="page-top">
+        <a href="index.html" class="back-home">← Back to Class One</a>
+        <span class="page-top-date" id="page-top-date">Today</span>
+    </div>
+
+    <div class="sales-header">
+        <div>
+            <h1>Sales Dashboard</h1>
+            <p>Record today's sales, review previous days, and keep an eye on your net balance.</p>
+        </div>
+        <div class="header-chip">
+            <span>Business day</span>
+            <strong id="header-day">Today</strong>
+        </div>
+    </div>
+
+    <div id="auth-notice" class="auth-notice" hidden>
+        You are not signed in, so sales and expenses cannot be saved.
+        <a href="login.html">Log in to Class One</a> and then come back to this page.
+    </div>
+
+    <!-- ================= TODAY ================= -->
+    <section class="today-panel">
+
+        <div>
+            <span class="today-label">Today's Sales</span>
+            <strong class="today-amount" id="today-total">K0.00</strong>
+            <span class="today-meta">
+                <b id="today-count">0</b> sale(s) ·
+                <b id="today-items">0</b> item(s) sold ·
+                average <b id="today-average">K0.00</b>
+            </span>
+        </div>
+
+        <div class="today-side">
+            <div>
+                <span>Expenses today</span>
+                <strong id="today-expenses">K0.00</strong>
+            </div>
+            <div>
+                <span>Net today</span>
+                <strong id="today-net">K0.00</strong>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- ================= PERIOD TOTALS ================= -->
+    <div class="kpi-row">
+
+        <div class="kpi accent">
+            <span>This Month</span>
+            <strong id="month-total">K0.00</strong>
+        </div>
+
+        <div class="kpi">
+            <span>Expenses this month</span>
+            <strong id="month-expenses">K0.00</strong>
+        </div>
+
+        <div class="kpi">
+            <span>Net this month</span>
+            <strong id="month-net">K0.00</strong>
+        </div>
+
+        <div class="kpi accent">
+            <span>This Year</span>
+            <strong id="year-total">K0.00</strong>
+        </div>
+
+        <div class="kpi">
+            <span>Expenses this year</span>
+            <strong id="year-expenses">K0.00</strong>
+        </div>
+
+        <div class="kpi">
+            <span>Net this year</span>
+            <strong id="year-net">K0.00</strong>
+        </div>
+
+    </div>
+
+    <!-- ================= FORMS ================= -->
+    <div class="form-columns">
+
+        <!-- ADD SALE -->
+        <div class="card">
+            <div class="card-head">
+                <div>
+                    <h2>Record a Sale</h2>
+                    <p>Sales dated today are added to today's total. Choose an earlier date for a late entry.</p>
+                </div>
+            </div>
+
+            <form id="sales-form" class="form-grid">
+
+                <div class="field full-width">
+                    <label for="sale-product">Product</label>
+                    <input type="text" id="sale-product" placeholder="e.g. Exercise Notebooks" required>
+                </div>
+
+                <div class="field full-width">
+                    <label for="sale-customer">Customer / Order Reference</label>
+                    <input type="text" id="sale-customer" placeholder="Customer name or order number">
+                </div>
+
+                <div class="field">
+                    <label for="sale-quantity">Quantity</label>
+                    <input type="number" id="sale-quantity" min="1" step="1" value="1" required>
+                </div>
+
+                <div class="field">
+                    <label for="sale-price">Price per item (K)</label>
+                    <input type="number" id="sale-price" min="0" step="0.01" placeholder="25.00" required>
+                </div>
+
+                <div class="field">
+                    <label for="sale-payment">Payment method</label>
+                    <select id="sale-payment">
+                        <option value="Cash">Cash</option>
+                        <option value="Mobile Money">Mobile Money</option>
+                        <option value="Bank">Bank</option>
+                        <option value="Card">Card</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="sale-date">Date</label>
+                    <input type="date" id="sale-date" required>
+                    <span class="field-help">Defaults to today. Future dates are not allowed.</span>
+                </div>
+
+                <button type="submit" class="btn-primary full-width">Add Sale Record</button>
+
+            </form>
+        </div>
+
+        <!-- ADD EXPENSE -->
+        <div class="card">
+            <div class="card-head">
+                <div>
+                    <h2>Record an Expense</h2>
+                    <p>Money spent by the business. Expenses reduce your net balance.</p>
+                </div>
+            </div>
+
+            <form id="expense-form" class="form-grid">
+
+                <div class="field full-width">
+                    <label for="expense-description">Expense description</label>
+                    <input type="text" id="expense-description" placeholder="e.g. Transport, rent, stationery stock" required>
+                </div>
+
+                <div class="field">
+                    <label for="expense-amount">Amount (K)</label>
+                    <input type="number" id="expense-amount" min="0.01" step="0.01" placeholder="0.00" required>
+                </div>
+
+                <div class="field">
+                    <label for="expense-category">Category</label>
+                    <select id="expense-category" required>
+                        <option value="Stock/Supplies">Stock / Supplies</option>
+                        <option value="Transport">Transport</option>
+                        <option value="Rent">Rent</option>
+                        <option value="Utilities">Utilities</option>
+                        <option value="Salaries">Salaries</option>
+                        <option value="Maintenance">Maintenance</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="expense-date">Date</label>
+                    <input type="date" id="expense-date" required>
+                </div>
+
+                <div class="field">
+                    <label for="expense-payment">Payment method</label>
+                    <select id="expense-payment">
+                        <option value="Cash">Cash</option>
+                        <option value="Mobile Money">Mobile Money</option>
+                        <option value="Bank">Bank</option>
+                        <option value="Card">Card</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-primary full-width">Save Expense</button>
+
+            </form>
+        </div>
+
+    </div>
+
+    <!-- ================= TODAY'S SALES ================= -->
+    <div class="card">
+        <div class="card-head">
+            <div>
+                <h2>Today's Sales</h2>
+                <p id="today-table-caption">Sales recorded for today.</p>
+            </div>
+            <span class="card-hint" id="today-table-total"></span>
+        </div>
+
+        <div class="table-wrapper">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Customer</th>
+                        <th class="num">Qty</th>
+                        <th class="num">Price</th>
+                        <th class="num">Total</th>
+                        <th>Payment</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="today-sales-list">
+                    <tr class="empty"><td colspan="7">Loading today's sales...</td></tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4">Today's total</td>
+                        <td class="num" id="today-footer-total">K0.00</td>
+                        <td colspan="2"></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+    <!-- ================= SALES BY DAY ================= -->
+    <div class="card">
+        <div class="card-head">
+            <div>
+                <h2>Sales by Day</h2>
+                <p>Each day closes on its own. Yesterday and every earlier day keep their own total.</p>
+            </div>
+            <span class="card-hint" id="daily-rows-count"></span>
+        </div>
+
+        <div class="table-wrapper">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th class="num">Sales</th>
+                        <th class="num">Items</th>
+                        <th class="num">Sales total</th>
+                        <th class="num">Expenses</th>
+                        <th class="num">Net</th>
+                        <th>Records</th>
+                    </tr>
+                </thead>
+                <tbody id="daily-list">
+                    <tr class="empty"><td colspan="7">Loading days...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ================= SALES HISTORY ================= -->
+    <div class="card">
+        <div class="card-head">
+            <div>
+                <h2>Sales History</h2>
+                <p>All recorded sales. Filter by day or search for a product or customer.</p>
+            </div>
+            <span class="card-hint" id="history-summary"></span>
+        </div>
+
+        <div class="filter-bar">
+            <select id="history-filter" aria-label="Filter sales by date">
+                <option value="all">All dates</option>
+            </select>
+            <input type="search" id="history-search" placeholder="Search product or customer...">
+            <button type="button" class="btn-secondary" id="history-reset" style="width:auto;padding:10px 16px;">Reset</button>
+        </div>
+
+        <div class="table-wrapper">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Product</th>
+                        <th>Customer</th>
+                        <th class="num">Qty</th>
+                        <th class="num">Price</th>
+                        <th class="num">Total</th>
+                        <th>Payment</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="sales-list">
+                    <tr class="empty"><td colspan="8">Loading sales...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ================= EXPENSES ================= -->
+    <div class="card">
+        <div class="card-head">
+            <div>
+                <h2>Expense Records</h2>
+                <p>All business expenses, newest first.</p>
+            </div>
+            <span class="card-hint" id="expenses-summary"></span>
+        </div>
+
+        <div class="table-wrapper">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Category</th>
+                        <th class="num">Amount</th>
+                        <th>Payment</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="expenses-list">
+                    <tr class="empty"><td colspan="6">Loading expenses...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ================= MONTHLY SUMMARY ================= -->
+    <div class="card">
+        <div class="card-head">
+            <div>
+                <h2>Monthly Sales Summary</h2>
+                <p>Sales totals for the current year, month by month.</p>
+            </div>
+        </div>
+
+        <div class="month-grid">
+            <div class="month-item">January<strong id="January">K0.00</strong></div>
+            <div class="month-item">February<strong id="February">K0.00</strong></div>
+            <div class="month-item">March<strong id="March">K0.00</strong></div>
+            <div class="month-item">April<strong id="April">K0.00</strong></div>
+            <div class="month-item">May<strong id="May">K0.00</strong></div>
+            <div class="month-item">June<strong id="June">K0.00</strong></div>
+            <div class="month-item">July<strong id="July">K0.00</strong></div>
+            <div class="month-item">August<strong id="August">K0.00</strong></div>
+            <div class="month-item">September<strong id="September">K0.00</strong></div>
+            <div class="month-item">October<strong id="October">K0.00</strong></div>
+            <div class="month-item">November<strong id="November">K0.00</strong></div>
+            <div class="month-item">December<strong id="December">K0.00</strong></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-head">
+            <div>
+                <h2>Yearly Sales</h2>
+                <p>Total sales recorded in the current year.</p>
+            </div>
+        </div>
+        <h3 id="year-summary" style="margin:0;color:var(--accent);">2026: K0.00</h3>
+    </div>
+
+</div>
+
+<script type="module" src="js/app.js"></script>
+
+</body>
+</html>
